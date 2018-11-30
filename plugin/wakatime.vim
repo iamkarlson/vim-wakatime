@@ -431,6 +431,12 @@ let s:VERSION = '7.1.2'
         for heartbeat in s:heartbeats_buffer
             let heartbeat_str = '{"entity": "' . s:JsonEscape(heartbeat.entity) . '", '
             let heartbeat_str = heartbeat_str . '"timestamp": ' . s:OrderTime(heartbeat.time, loop_count) . ', '
+
+            let project = read !powershell -noninteractive -noprofile -command (Split-Path -Leaf (git remote get-url origin)).Replace(\".git\",\"\")
+            if heartbeat.is_write
+                let heartbeat_str = heartbeat_str . '"project":"' . project . '", ' 
+            endif
+
             let heartbeat_str = heartbeat_str . '"is_write": '
             if heartbeat.is_write
                 let heartbeat_str = heartbeat_str . 'true'
